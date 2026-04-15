@@ -65,14 +65,16 @@
             <li><strong>Special Moves:</strong> Supports Castling, En Passant, and Pawn Promotion.</li>
             <li><strong>Game Over:</strong> The game ends upon Checkmate or Stalemate.</li>
         </ul>
-        <p><em>Note: The game may take a few moments to initialize the graphics system.</em></p>
+        <p><em>Note: The game may take a few moments to initialize.</em></p>
     </div>
 
-    <script src="https://cjrtnc.leaningtech.com/2.3/loader.js"></script>
+    <script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
     <script>
-        cheerpjInit();
-        cheerpjCreateDisplay(800, 600, document.getElementById("container"));
-        cheerpjRunMain("main.Main", "/app/ChessGame.jar");
+        (async function() {
+            await cheerpjInit();
+            cheerpjCreateDisplay(800, 600, document.getElementById("container"));
+            await cheerpjRunMain("main.Main", "/app/ChessGame.jar");
+        })();
     </script>
 </body>
 </html>
