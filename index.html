@@ -31,6 +31,7 @@
             border-radius: 4px;
             overflow: hidden;
             margin: 20px 0;
+            position: relative;
         }
         .instructions {
             max-width: 800px;
@@ -47,6 +48,20 @@
         ul {
             padding-left: 20px;
         }
+        #loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            color: white;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -55,7 +70,9 @@
         <p>A classic Java Chess Game running in your browser via CheerpJ</p>
     </header>
 
-    <div id="container"></div>
+    <div id="container">
+        <div id="loading-overlay">Initializing Game... Please wait.</div>
+    </div>
 
     <div class="instructions">
         <h2>How to Play</h2>
@@ -65,14 +82,27 @@
             <li><strong>Special Moves:</strong> Supports Castling, En Passant, and Pawn Promotion.</li>
             <li><strong>Game Over:</strong> The game ends upon Checkmate or Stalemate.</li>
         </ul>
-        <p><em>Note: The game may take a few moments to initialize the graphics system.</em></p>
+        <p><em>Note: If the game doesn't load, ensure your browser is up to date and you are serving this page via a web server (not just opening the file directly).</em></p>
     </div>
 
-    <script src="https://cjrtnc.leaningtech.com/2.3/loader.js"></script>
+    <script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
     <script>
-        cheerpjInit();
-        cheerpjCreateDisplay(800, 600, document.getElementById("container"));
-        cheerpjRunMain("main.Main", "/app/ChessGame.jar");
+        (async function() {
+            try {
+                await cheerpjInit();
+                const container = document.getElementById("container");
+                cheerpjCreateDisplay(800, 600, container);
+
+                // Remove loading overlay once initialized
+                const overlay = document.getElementById("loading-overlay");
+                if (overlay) overlay.remove();
+
+                await cheerpjRunMain("main.Main", "/app/ChessGame.jar");
+            } catch (error) {
+                console.error("Error initializing CheerpJ:", error);
+                document.getElementById("loading-overlay").innerText = "Error loading game. Please try refreshing.";
+            }
+        })();
     </script>
 </body>
 </html>
